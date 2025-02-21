@@ -21,6 +21,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const router = express.Router();
 
+const requireAuth = (req, res, next) => {
+  if (!req.session.adminId) return res.redirect("/api/admin/login");
+  next();
+};
+
 router.post(
   "/api/admin/register",
   checkSchema(createUserValidationSchema),
@@ -83,6 +88,7 @@ router.post(
 
       // Compare passwords
       const isPasswordValid = comparePassword(data.password, admin.password);
+      req.session.adminId = admin.id;
 
       if (!isPasswordValid) {
         return res.status(401).send("Invalid username or password");
@@ -99,10 +105,14 @@ router.post(
   }
 );
 
-router.get("/api/admin/dashboard", (req, res) => {
+router.get("/api/admin/dashboard", requireAuth, (req, res) => {
   res.render("dashboard.ejs", {
     title: "Admin Dashboard",
     layout: "adminlayout.ejs",
   });
+});
+
+router.get("/api/admin/logout", (req, res) => {
+  req.session.destroy(() => res.redirect("/api/admin/login"));
 });
 export default router;

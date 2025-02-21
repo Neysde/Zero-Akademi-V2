@@ -6,21 +6,24 @@ import path from "path";
 import { fileURLToPath } from "url";
 import pageRouter from "./routes/page-router.mjs";
 import adminRouter from "./routes/admin-router.mjs";
+import session from "express-session";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: "http://localhost:5500", // Replace with your frontend's origin
-  })
-);
-
 // Set up view engine
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "ejs");
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // Serve static files from public directory
 //app.use(express.static(path.join(__dirname, "../public")));
