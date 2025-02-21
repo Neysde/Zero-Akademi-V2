@@ -1,0 +1,325 @@
+/* header */
+/* Style the header with a grey background and some padding */
+.header {
+  overflow: hidden;
+  /* background-image: linear-gradient(to right, #000000, #e7312c, #e8711c); */
+
+  padding: 20px 10px;
+  border-radius: 10px;
+  position: sticky;
+  width: 75%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Style the header links */
+.header a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 25px;
+  border-radius: 4px;
+}
+
+.header a:active {
+  font-weight: bold;
+}
+
+/* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
+.header a.logo {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+/* Change the background color on mouse-over */
+.header a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.header #register:hover {
+  color: white;
+}
+
+/* Style the active/current link*/
+.header a.active {
+  color: white;
+  font-weight: 800;
+}
+
+/* Float the link section to the right */
+.header-right {
+  float: right;
+}
+
+.imglogo {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  bottom: 10px;
+  margin-right: 5px;
+}
+
+.logo {
+  color: white;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 75%;
+}
+
+/* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
+@media screen and (max-width: 1015px) {
+  .header a {
+    font-size: 15px;
+    padding: 8px;
+  }
+
+  .logo {
+    color: white;
+    font-size: 18px;
+  }
+
+  .imglogo {
+    top: 3px;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .header {
+    width: 75%;
+  }
+  .header a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .header-right {
+    float: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .header {
+    width: 100%;
+  }
+  .header a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+  .header-right {
+    float: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .card-container {
+    width: 400px;
+  }
+}
+
+.card-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  flex-flow: wrap;
+  gap: 10px;
+  width: 75%;
+}
+
+.body-container {
+  width: 75%;
+}
+
+.zero-banner {
+  margin-top: 30px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 2px 0 black;
+}
+
+@media screen and (max-width: 500px) {
+  .body-container {
+    width: 100%;
+  }
+
+  .zero-banner {
+    border-radius: 0;
+  }
+}
+
+/* footer */
+
+.footer {
+  display: inline-block;
+  margin-top: 100px;
+  height: 150px;
+  width: 100%;
+  background-color: #eb926a;
+}
+
+.footertext {
+  color: white;
+  padding-top: 20px;
+  font-family: "Hind Siliguri", sans-serif;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 0;
+}
+
+/* timer */
+
+#countdown {
+  margin-top: 20px;
+  font-size: 30px;
+  border-radius: 10px;
+  text-align: center;
+  padding: 25px;
+  padding-top: 35px;
+  padding-bottom: 18px;
+}
+
+#countdown h1 {
+  margin-bottom: 25px;
+  font-size: 38px;
+  color: #e7662b;
+}
+
+#countdown h3 {
+  margin-top: 35px;
+  font-size: 25px;
+  background: none;
+  border-bottom: none;
+  color: black;
+  font-weight: bold;
+  padding: none;
+}
+
+#countdown div {
+  color: black;
+  display: inline-block;
+  margin: 0 15px;
+  font-weight: 600;
+}
+
+#countdown div span {
+  color: #e7662b;
+}
+
+.price-title {
+  text-align: center;
+  margin-top: 60px;
+  font-weight: bold;
+  font-size: 35px;
+}
+
+@media screen and (max-width: 500px) {
+  #countdown h1 {
+    font-size: 30px;
+  }
+
+  #countdown h3 {
+    font-size: 25px;
+    line-height: 2rem;
+  }
+
+  #countdown div span {
+    font-size: 25px;
+    line-height: 2rem;
+  }
+
+  #countdown div {
+    font-size: 25px;
+    line-height: 2rem;
+  }
+
+  #price {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .price-title {
+    margin-top: 40px;
+    font-size: 25px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  #countdown h1 {
+    line-height: 2rem;
+  }
+
+  #countdown h3 {
+    line-height: 2rem;
+  }
+
+  #countdown div span {
+    line-height: 2rem;
+  }
+
+  .price-title {
+    margin-top: 40px;
+    font-size: 30px;
+  }
+}
+
+/* about */
+
+#about {
+  margin-top: 20px;
+  font-size: 24px;
+  border-radius: 10px;
+
+  padding: 40px;
+  line-height: 2.2rem;
+}
+
+#about div {
+  font-weight: bold;
+  color: #e7662b;
+  font-size: 38px;
+  animation: fadeInDown 0.4s ease-in-out;
+}
+
+.about-button {
+  text-decoration: none;
+  margin-right: auto;
+  margin-left: auto;
+  color: #e7662b;
+
+  font-size: 38px;
+}
+
+.about-button:hover {
+  color: #dd2c00;
+  transition: 0.3s;
+}
+
+/* price */
+
+#priceTitle {
+  color: white;
+  font-size: 45px;
+}
+
+#monthTitle {
+  color: white;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+#priceDesc {
+  text-align: center;
+  margin-top: 50px;
+}

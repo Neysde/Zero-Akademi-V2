@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head></head>
+    <style>
+      .admin-panel {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+      }
+
+      .coach-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      .coach-table th,
+      .coach-table td {
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        text-align: left;
+      }
+
+      .coach-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+      }
+
+      /* Base button styling */
+      .button {
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid transparent;
+        text-align: center;
+        display: inline-block;
+      }
+
+      /* Primary action buttons (Add, Edit, Save) */
+      .button-primary {
+        background-color: #F97316; /* Your orange color */
+        color: white;
+        border: 1px solid transparent; /* Ensure consistent border */
+      }
+
+      .button-primary:hover {
+        background-color: #EA580C; /* Slightly darker orange */
+        transform: translateY(-1px);
+        border-color: transparent; /* Remove any border color */
+      }
+
+      /* Secondary action buttons (Cancel) */
+      .button-secondary {
+        background-color: #f1f5f9; /* Light gray */
+        color: #1e293b; /* Dark gray */
+        border: 1px solid #cbd5e1; /* Border gray */
+      }
+
+      .button-secondary:hover {
+        background-color: #e2e8f0; /* Slightly darker gray */
+        border-color: transparent; /* Remove border color */
+        color: #1e293b; /* Maintain black text on hover */
+      }
+
+      /* Danger action buttons (Delete) */
+      .button-danger {
+        background-color: #ef4444; /* Red */
+        color: white;
+        border: 1px solid transparent; /* Ensure consistent border */
+      }
+
+      .button-danger:hover {
+        background-color: #dc2626; /* Darker red */
+        transform: translateY(-1px);
+        border-color: transparent; /* Remove border color */
+      }
+
+      /* Responsive button sizing */
+      @media (max-width: 768px) {
+        .button {
+          padding: 0.6rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      /* Action buttons container */
+      .action-buttons {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+
+      /* Table action buttons */
+      .coach-table .action-buttons {
+        margin-top: 0;
+        justify-content: flex-start;
+      }
+
+      /* Modal button container */
+      .modal-content .action-buttons {
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+      }
+
+      /* Add New Coach button */
+      .add-coach-button {
+        margin: 0 auto 1.5rem; /* Center horizontally with auto margins */
+        display: block; /* Make it a block element for centering */
+        width: 100%;
+        max-width: 200px;
+      }
+
+      /* Coach Management title */
+      .admin-panel h1 {
+        margin-bottom: 1rem; /* Space below the title */
+      }
+
+      /* Responsive table actions */
+      @media (max-width: 480px) {
+        .coach-table .action-buttons {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .coach-table .action-buttons .button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-panel">
+      <h1>Coach Management</h1>
+      <button onclick="openCoachModal()" class="button button-primary add-coach-button">Add New Coach</button>
+
+      <!-- Coaches Table -->
+      <table class="coach-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>University</th>
+            <th>Program</th>
+            <th>Field</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="coaches-list">
+          <!-- Dynamic content will be inserted here -->
+        </tbody>
+      </table>
+
+      <!-- Coach Modal -->
+      <div class="modal-overlay" id="coachModal">
+        <div class="modal-content">
+          <h2 id="modalTitle">Add New Coach</h2>
+          <form id="coachForm">
+            <input type="hidden" id="coachId" name="coachId" />
+
+            <!-- Form Fields -->
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="university">University</label>
+              <input type="text" id="university" required />
+            </div>
+
+            <div class="form-group">
+              <label for="program">Program</label>
+              <input type="text" id="program" required />
+            </div>
+
+            <div class="form-group">
+              <label for="field">Field</label>
+              <input type="text" id="field" required />
+            </div>
+
+            <div class="form-group">
+              <label for="score">Score</label>
+              <input type="text" id="score" required />
+            </div>
+
+            <div class="form-group">
+              <label for="about">About</label>
+              <textarea id="about"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="imageUrl">Image URL</label>
+              <input type="text" id="imageUrl" />
+            </div>
+
+            <div class="form-group">
+              <label for="examResultUrl">Exam Result URL</label>
+              <input type="text" id="examResultUrl" />
+            </div>
+
+            <!-- Modal Buttons -->
+            <div class="action-buttons">
+              <button type="submit" class="button button-primary">Save</button>
+              <button type="button" onclick="closeModal()" class="button button-secondary">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Load coaches on initial load
+      document.addEventListener("DOMContentLoaded", fetchCoaches);
+
+      async function fetchCoaches() {
+        try {
+          const response = await fetch("/api/coaches");
+          const coaches = await response.json();
+          populateTable(coaches);
+        } catch (error) {
+          console.error("Error fetching coaches:", error);
+        }
+      }
+
+      function populateTable(coaches) {
+        const tbody = document.getElementById("coaches-list");
+        tbody.innerHTML = coaches
+          .map(
+            (coach) => `
+                <tr>
+                    <td>${coach.name}</td>
+                    <td>${coach.university}</td>
+                    <td>${coach.program}</td>
+                    <td>${coach.field}</td>
+                    <td class="action-buttons">
+                        <button onclick="editCoach('${coach._id}')" class="button button-primary">Edit</button>
+                        <button onclick="deleteCoach('${coach._id}')" class="button button-danger">Delete</button>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      // Modal handling functions
+      function openCoachModal(coachData = null) {
+        const modal = document.getElementById("coachModal");
+        const modalTitle = document.getElementById("modalTitle");
+        
+        // Set modal title based on whether we're editing or adding
+        modalTitle.textContent = coachData ? "Edit Coach" : "Add New Coach";
+        
+        // Clear form fields when adding new coach
+        if (!coachData) {
+          document.getElementById("coachId").value = "";
+          document.getElementById("name").value = "";
+          document.getElementById("university").value = "";
+          document.getElementById("program").value = "";
+          document.getElementById("field").value = "";
+          document.getElementById("score").value = "";
+          document.getElementById("about").value = "";
+          document.getElementById("imageUrl").value = "";
+          document.getElementById("examResultUrl").value = "";
+        } else {
+          // Set the coachId when editing
+          document.getElementById("coachId").value = coachData._id;
+          document.getElementById("name").value = coachData.name;
+          document.getElementById("university").value = coachData.university;
+          document.getElementById("program").value = coachData.program;
+          document.getElementById("field").value = coachData.field;
+          document.getElementById("score").value = coachData.score;
+          document.getElementById("about").value = coachData.about;
+          document.getElementById("imageUrl").value = coachData.imageUrl;
+          document.getElementById("examResultUrl").value = coachData.examResultUrl;
+        }
+        
+        modal.style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("coachModal").style.display = "none";
+      }
+
+      async function deleteCoach(id) {
+        try {
+    const response = await fetch(`/api/coaches/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete coach');
+    }
+    // Refresh the coaches list
+    fetchCoaches();
+  } catch (error) {
+    console.error('Error deleting coach:', error);
+    alert('Failed to delete coach');
+  }
+      }
+
+      async function editCoach(id) {
+        try {
+          // 1. First fetch the coach data
+          const response = await fetch(`/api/coaches/${id}`);
+          
+          // 2. Check if response is OK before parsing
+          if (!response.ok) throw new Error('Failed to fetch coach data');
+          
+          // 3. Get the coach data from response
+          const coachData = await response.json();
+          
+          // 4. Now open modal with retrieved data
+          openCoachModal(coachData);
+        } catch (error) {
+          console.error('Error fetching coach data:', error);
+          alert('Failed to load coach data');
+        }
+      }
+
+      // Form submission handler
+      document.getElementById("coachForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const coachData = {
+          name: document.getElementById("name").value,
+          university: document.getElementById("university").value,
+          program: document.getElementById("program").value,
+          field: document.getElementById("field").value,
+          score: document.getElementById("score").value,
+          about: document.getElementById("about").value,
+          imageUrl: document.getElementById("imageUrl").value,
+          examResultUrl: document.getElementById("examResultUrl").value
+        };
+
+        const coachId = document.getElementById("coachId").value;
+        const method = coachId ? "PUT" : "POST";
+        const url = coachId ? `/api/coaches/${coachId}` : `/api/coaches/single`;
+
+        try {
+          console.log("Sending request:", { method, url, coachData }); // Debug log
+          
+          const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(coachData),
+          });
+
+          if (!response.ok) throw new Error("Save failed");
+
+          closeModal();
+          fetchCoaches();
+        } catch (error) {
+          console.error("Error saving coach:", error);
+          alert("Failed to save coach. Please check the console for details.");
+        }
+      });
+    </script>
+  </body>
+</html>

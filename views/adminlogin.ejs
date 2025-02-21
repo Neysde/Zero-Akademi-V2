@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #e8711c;
+        --primary-dark: #d66516;
+        --bg-tint: #fff5ef;
+        --text-dark: #2d2d2d;
+        --text-light: #4a4a4a;
+        --spacing-xs: 0.5rem;
+        --spacing-sm: 0.75rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2.5rem;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        background-color: var(--bg-tint);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-md);
+      }
+
+      .login-container {
+        background: white;
+        padding: clamp(var(--spacing-lg), 5vw, var(--spacing-xl));
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(232, 113, 28, 0.15);
+        width: 100%;
+        max-width: 400px;
+        transition: transform 0.3s ease;
+      }
+
+      @media (min-width: 768px) {
+        .login-container:hover {
+          transform: translateY(-2px);
+        }
+      }
+
+      h1 {
+        color: var(--text-dark);
+        margin-bottom: var(--spacing-xl);
+        font-size: clamp(1.5rem, 4vw, 1.75rem);
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        color: var(--text-light);
+        font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+        font-weight: 500;
+      }
+
+      input {
+        width: 100%;
+        padding: var(--spacing-sm);
+        border: 2px solid #e1e1e1;
+        border-radius: 8px;
+        font-size: clamp(0.95rem, 2.5vw, 1rem);
+        font-family: "Inter", sans-serif;
+        transition: all 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(232, 113, 28, 0.1);
+      }
+
+      button {
+        width: 100%;
+        padding: var(--spacing-sm);
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: clamp(0.95rem, 2.5vw, 1rem);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Outfit", sans-serif;
+      }
+
+      button:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: var(--spacing-sm);
+        }
+
+        .login-container {
+          border-radius: 8px;
+        }
+
+        .form-group:last-of-type {
+          margin-bottom: var(--spacing-xl);
+        }
+      }
+    </style>
+    <script src="/js/fetch-admin.mjs"></script>
+  </head>
+  <body>
+    <div class="login-container">
+      <h1>Admin Login</h1>
+      <form method="POST" action="http://localhost:3000/api/admin/login">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            autocomplete="username"
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        <button type="submit" id="login-button">Log In</button>
+      </form>
+    </div>
+  </body>
+</html>
