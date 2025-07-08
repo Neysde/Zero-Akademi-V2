@@ -10,36 +10,10 @@
 
     <link rel="stylesheet" href="/css/style.css" />
     <style>
-      * {
-        font-family: "Hind Siliguri", sans-serif;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
       body {
-        background: #fbf5f0
+        background: #FFFFFF
           url("https://cloud.githubusercontent.com/assets/8037580/18605179/85a080d2-7cbd-11e6-9079-ec09a8024662.png")
           repeat;
-      }
-      .contact {
-        padding: 20px;
-        border-radius: 10px;
-        position: relative;
-        width: 350px;
-        box-shadow: 1px 1px 10px 1px;
-        margin-top: 20px;
-        object-fit: cover;
-      }
-
-      .contact-container {
-        margin-top: 30px;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 1em;
-        width: 65%;
-        margin-left: auto;
-        margin-right: auto;
       }
 
       .maillink {
@@ -49,60 +23,18 @@
         font-weight: bold;
       }
 
-      p {
-        color: white;
-        font-size: 18px;
-      }
-
       h3 {
-        font-size: 25px;
-        font-weight: bold;
+        font-size: 30px;
+        margin-bottom: 10px;
       }
 
-      .wpbutton {
-        text-decoration: none;
+      p {
         font-size: 18px;
-        padding: 15px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: #075e54;
-        border: 0;
-        border-radius: 10px;
-        color: white;
-        box-shadow: 1px 1px 10px 1px black;
+        margin-bottom: 20px;
       }
 
-      .wpbutton:hover {
-        opacity: 70%;
-        transition: 0.2s;
-        box-shadow: none;
-      }
-
-      .instabutton {
-        text-decoration: none;
-        font-size: 18px;
-        padding: 15px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: #962fbf;
-        border: 0;
-        border-radius: 10px;
-        color: white;
-        box-shadow: 1px 1px 10px 1px black;
-      }
-
-      .instabutton:hover {
-        opacity: 70%;
-        transition: 0.2s;
-        box-shadow: none;
-      }
-
-      .contact p a {
-        text-decoration: none;
-        font-weight: bold;
-        color: white;
+      i {
+        margin-bottom: 10px;
       }
     </style>
     <title>İletişim</title>
@@ -122,17 +54,10 @@
         ></i>
         <h3>Whatsapp</h3>
         <p>
-          Soru çözümü yaptığımız ve sohbet ettiğimiz topluluğumuza katılmak
+          <strong>Tamamen ücretsiz</strong> soru çözümü yaptığımız ve tavsiyeler verdiğimiz topluluğumuza katılmak
           istersen aşağıdaki butona tıklayabilirsin.
         </p>
-        <p>
-          <button
-            class="wpbutton"
-            onclick="window.location.href='https://chat.whatsapp.com/Bh1VwlLxqgsFbFiu5KqSUe'"
-          >
-            Topluluğa Katıl!
-          </button>
-        </p>
+        <a href="https://chat.whatsapp.com/Bh1VwlLxqgsFbFiu5KqSUe" class="contact-button wtsapp" target="_blank">Topluluğa Katıl!</a>
       </div>
 
       <div
@@ -152,18 +77,11 @@
         ></i>
         <h3>Instagram</h3>
         <p>
-          <a href="https://www.instagram.com/zer0akademi/">Instagram'daki</a>
+          Instagram'daki
           içeriklerimizi kaçırmak istemiyorsan aşağıdaki butona tıklayarak takip
           edebilirsin.
         </p>
-        <p>
-          <button
-            class="instabutton"
-            onclick="window.location.href='https://www.instagram.com/zer0akademi/'"
-          >
-            Takip Et!
-          </button>
-        </p>
+        <a href="https://www.instagram.com/zeroakademikocluk/" class="contact-button insta" target="_blank">Takip Et!</a>
       </div>
 
       <div class="contact" style="background-color: #90030c">
@@ -178,26 +96,18 @@
         ></i>
         <h3>YouTube</h3>
         <p>
-          <a href="https://www.youtube.com/@ZeroAkademi">YouTube'daki</a>
+          YouTube'daki
           içeriklerimizi kaçırmak istemiyorsan aşağıdaki butona tıklayarak takip
           edebilirsin.
         </p>
-        <p>
-          <button
-            class="wpbutton"
-            style="background-color: #ee0f0f"
-            onclick="window.location.href='https://www.youtube.com/@ZeroAkademi'"
-          >
-            Takip Et!
-          </button>
-        </p>
+        <a href="https://www.youtube.com/@ZeroAkademi" class="contact-button yt" target="_blank">Takip Et!</a>
       </div>
 
-      <div class="contact" style="background-color: #0489c9; flex: 100%">
+      <div class="contact email-contact" style="background-color: #0489c9;">
         <i class="fa-solid fa-square-envelope fa-5x" style="color: white"></i>
         <h3>E-Mail</h3>
         <p>
-          <a href="faq.html" class="maillink">Sıkça Sorulan Sorular</a>
+          <a href="/faq" class="maillink">Sıkça Sorulan Sorular</a>
           kısmında cevabını bulamadığınız sorularınızı sormak isterseniz
           yazabilirsiniz.
         </p>

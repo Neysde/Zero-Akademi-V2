@@ -22,19 +22,36 @@ const coachSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: true,
   },
-  field: {
+  field: [
+    {
     type: mongoose.Schema.Types.String,
     required: true,
-  },
+    }
+  ],
   about: {
     type: mongoose.Schema.Types.String,
     required: true,
   },
-  imageUrl: {
-    type: mongoose.Schema.Types.String,
+  coachPicture: {
+    url: {
+      type: String,
+    },
+    publicId: {
+      type: String,
+    },
   },
-  examResultUrl: {
-    type: mongoose.Schema.Types.String,
+  examResultImage: {
+    url: {
+      type: String,
+    },
+    publicId: {
+      type: String,
+    },
+  },
+  order: {
+    type: Number,
+    required: true,
+    default: 0,
   },
 });
 

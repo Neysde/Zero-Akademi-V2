@@ -1,4 +1,5 @@
 import express from "express";
+import { upload, uploadToCloudinary, deleteImage } from "./image-upload.mjs";
 
 import { Admin } from "../mongoose/schemas/admin.mjs";
 import mongoose from "mongoose";
@@ -22,44 +23,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const router = express.Router();
 
 const requireAuth = (req, res, next) => {
-  if (!req.session.adminId) return res.redirect("/api/admin/login");
+  if (!req.session.adminId) return res.redirect("/admin/login");
   next();
 };
 
-router.post(
-  "/api/admin/register",
-  checkSchema(createUserValidationSchema),
-  async (req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      //Use array.map() to extract objects' msg property in an array and create a new array with that property.
-      const errorMessages = result.array().map((error) => error.msg);
-      return res.status(400).send(errorMessages);
-    }
-
-    const data = matchedData(req);
-
-    // Get the count of existing admins to generate the next ID
-    const adminCount = await Admin.countDocuments();
-    const encryptedPassword = hashPassword(data.password);
-    const newAdmin = new Admin({
-      ...data,
-      id: adminCount + 1, // Auto-increment ID based on existing admin count
-      password: encryptedPassword,
-    });
-
-    try {
-      const savedAdmin = await newAdmin.save();
-      return res.status(201).send(savedAdmin);
-    } catch (err) {
-      return res.status(400).send(err);
-    }
-  }
-);
-
-router.get("/api/admin/login", (req, res) => {
+router.get("/admin/login", (req, res) => {
   res.render("adminlogin.ejs", {
     title: "Admin Login",
+    BASE_URL: process.env.BASE_URL,
     layout: "adminlayout.ejs",
   });
 });
@@ -88,16 +59,21 @@ router.post(
 
       // Compare passwords
       const isPasswordValid = comparePassword(data.password, admin.password);
-      req.session.adminId = admin.id;
 
       if (!isPasswordValid) {
         return res.status(401).send("Invalid username or password");
       }
 
-      // Password is valid, send success response
-      // You might want to create a session or JWT token here
-      return res.status(200).send({
-        message: `Login successful ${admin.username}`,
+      // Password is valid. Set session and save it before responding.
+      req.session.adminId = admin.id;
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send("Server error during login.");
+        }
+        res.status(200).send({
+          message: `Login successful ${admin.username}`,
+        });
       });
     } catch (err) {
       return res.status(500).send("Server error");
@@ -105,7 +81,7 @@ router.post(
   }
 );
 
-router.get("/api/admin/dashboard", requireAuth, (req, res) => {
+router.get("/admin/dashboard", requireAuth, (req, res) => {
   res.render("dashboard.ejs", {
     title: "Admin Dashboard",
     layout: "adminlayout.ejs",
@@ -115,4 +91,28 @@ router.get("/api/admin/dashboard", requireAuth, (req, res) => {
 router.get("/api/admin/logout", (req, res) => {
   req.session.destroy(() => res.redirect("/api/admin/login"));
 });
+router.post(
+  "/api/upload-image",
+  requireAuth,
+  upload.fields([
+    { name: "coachPicture", maxCount: 1 },
+    { name: "examResultImage", maxCount: 1 },
+  ]),
+  uploadToCloudinary,
+  (req, res) => {
+    if (req.cloudinaryData && Object.keys(req.cloudinaryData).length > 0) {
+      res.status(200).json({
+        success: true,
+        message: "Images uploaded successfully.",
+        data: req.cloudinaryData,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "No images were uploaded.",
+      });
+    }
+  }
+);
+
 export default router;

@@ -1,268 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/card.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="/js/main.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+<link rel="stylesheet" href="/css/index-page.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
-    <title>Zero Akademi</title>
-    <link rel="icon" type="image/png" href="images\ComfyUI_00067_v4.png" />
-
-    <script
-      src="https://kit.fontawesome.com/6f6e08889e.js"
-      crossorigin="anonymous"
-    ></script>
-  </head>
-  <body>
-    <div class="body-container">
-      <img
-        src="../images/bannerzero3.jpg"
-        class="zero-banner"
-        id="zeroBanner"
-      />
-
-      <!--<div
-        id="price"
-        style="
-          background-color: #eb926a;
-          padding: 20px;
-          margin-top: 15px;
-          padding-top: 40px;
-          padding-bottom: 20px;
-          border-radius: 8px;
-        "
-      >
-         <h1 id="priceTitle">Fiyatlandırma</h1>
-
-        <div id="priceDesc">
-          <div id="monthTitle">Aylık</div>
-          <br /><s style="color: white; font-size: 22px">2599₺</s>
-          <span style="color: white; font-weight: bold; font-size: 22px">
-            => 2299₺</span
-          ><span style="color: white; font-weight: lighter"> her ay</span
-          ><br /><br />
-          <span style="color: white; font-weight: lighter">
-            Detaylı bilgi için SSS kısmına göz atın.</span
-          >
-        </div>
-      </div> -->
-
-      <table id="prices" class="pricing-table">
-        <div class="price-title">2024 Yılına Özel Fiyatlar</div>
-        <tbody>
-          <tr>
-            <td>
-              <h2 style="color: black; margin-top: 10px; border-radius: 10px">
-                Aylık
-              </h2>
-              <h4 style="font-size: 20px; padding: 10px; color: black">
-                <s
-                  >2599₺<span style="font-weight: 100; font-size: 18px"
-                    >/aylık</span
-                  ></s
-                >
-              </h4>
-              <h5
-                style="
-                  font-size: 30px;
-                  padding: 20px;
-                  color: black;
-                  padding-top: 10px;
-                "
-              >
-                2299₺<span style="font-weight: 100; font-size: 18px"
-                  >/Aylık</span
-                >
-              </h5>
-              <p><i class="fa-solid fa-check"></i> Haftada En Az Bir Görüşme</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Günlük-Haftalık Program ve
-                Rapor
-              </p>
-              <p><i class="fa-solid fa-check"></i> Detaylı Deneme Analizi</p>
-              <p><i class="fa-solid fa-check"></i> 7/24 Whatsapp İletişimi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Derece Öğrencileriyle Dolu
-                Soru Çözüm Grubu
-              </p>
-              <p><i class="fa-solid fa-check"></i> Uyku Düzeni Oluşturma</p>
-              <p><i class="fa-solid fa-check"></i> Çalışma Düzeni Oluşturma</p>
-
-              <p>
-                <i class="fa-solid fa-check"></i> Psikolojik Destek ve
-                Motivasyon
-              </p>
-
-              <p>
-                <i class="fa-solid fa-check"></i> Seviyeye Uygun Kaynak Önerisi
-              </p>
-              <p><i class="fa-solid fa-check"></i> Tanışma Görüşmesi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Memnun Kalınmazsa İlk 7 Gün
-                İçerisinde İade
-              </p>
-            </td>
-
-            <td>
-              <h2 style="color: black; margin-top: 10px; border-radius: 10px">
-                3 AYLIK
-              </h2>
-              <h4 style="font-size: 20px; padding: 10px; color: black">
-                <s
-                  >7799₺<span style="font-weight: 100; font-size: 18px"
-                    >/tek seferlik</span
-                  ></s
-                >
-              </h4>
-              <h5
-                style="
-                  font-size: 30px;
-                  padding: 20px;
-                  color: black;
-                  padding-top: 10px;
-                "
-              >
-                5999₺<span style="font-weight: 100; font-size: 18px"
-                  >/Tek seferlik</span
-                >
-              </h5>
-              <p><i class="fa-solid fa-check"></i> Haftada En Az Bir Görüşme</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Günlük-Haftalık Program ve
-                Rapor
-              </p>
-              <p><i class="fa-solid fa-check"></i> Detaylı Deneme Analizi</p>
-              <p><i class="fa-solid fa-check"></i> 7/24 Whatsapp İletişimi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Derece Öğrencileriyle Dolu
-                Soru Çözüm Grubu
-              </p>
-              <p><i class="fa-solid fa-check"></i> Uyku Düzeni Oluşturma</p>
-              <p><i class="fa-solid fa-check"></i> Çalışma Düzeni Oluşturma</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Psikolojik Destek ve
-                Motivasyon
-              </p>
-
-              <p>
-                <i class="fa-solid fa-check"></i> Seviyeye Uygun Kaynak Önerisi
-              </p>
-              <p><i class="fa-solid fa-check"></i> Tanışma Görüşmesi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Memnun Kalınmazsa İlk 10 Gün
-                İçerisinde İade
-              </p>
-              <p><i class="fa-solid fa-check"></i> Aylık Memnuniyet Takibi</p>
-              <p><i class="fa-solid fa-check"></i> Beslenme Tavsiyesi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> İki Kez Koç Değiştirme Hakkı
-              </p>
-              <a
-                href="register"
-                onclick="window.location.href = '/register';"
-                style="margin-top: 40px; width: 98%"
-                >Kayıt Ol</a
-              >
-            </td>
-
-            <td>
-              <h2 style="color: black; margin-top: 10px; border-radius: 10px">
-                YKS 2024'e kadar
-              </h2>
-              <h4 style="font-size: 20px; padding: 10px; color: black">
-                <s
-                  >18399₺<span style="font-weight: 100; font-size: 18px"
-                    >/tek seferlik</span
-                  ></s
-                >
-              </h4>
-              <h5
-                style="
-                  font-size: 30px;
-                  padding: 20px;
-                  color: black;
-                  padding-top: 10px;
-                "
-              >
-                12999₺<span style="font-weight: 100; font-size: 18px"
-                  >/Tek seferlik</span
-                >
-              </h5>
-              <p><i class="fa-solid fa-check"></i> Haftada En Az Bir Görüşme</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Günlük-Haftalık Program ve
-                Rapor
-              </p>
-              <p><i class="fa-solid fa-check"></i> Detaylı Deneme Analizi</p>
-              <p><i class="fa-solid fa-check"></i> 7/24 Whatsapp İletişimi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Derece Öğrencileriyle Dolu
-                Soru Çözüm Grubu
-              </p>
-              <p><i class="fa-solid fa-check"></i> Uyku Düzeni Oluşturma</p>
-              <p><i class="fa-solid fa-check"></i> Çalışma Düzeni Oluşturma</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Psikolojik Destek ve
-                Motivasyon
-              </p>
-              <p>
-                <i class="fa-solid fa-check"></i> Seviyeye Uygun Kaynak Önerisi
-              </p>
-              <p><i class="fa-solid fa-check"></i> Tanışma Görüşmesi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Memnun Kalınmazsa İlk 14 Gün
-                İçerisinde İade
-              </p>
-              <p><i class="fa-solid fa-check"></i> Aylık Memnuniyet Takibi</p>
-              <p><i class="fa-solid fa-check"></i> Beslenme Tavsiyesi</p>
-              <p>
-                <i class="fa-solid fa-check"></i> Sınırsız Koç Değiştirme Hakkı
-              </p>
-            </td>
-
-            <!-- <td class="popular">
-              <h2>3 Aylık</h2>
-              <h4>$999.99</h4>
-              <h5>Save $99.99!</h5>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <a href="#" style="margin-top: 40px; width: 98%">Kayıt Ol</a>
-            </td>
-
-            <td>
-              <h2>8 Aylık</h2>
-              <h4>$999.99</h4>
-              <h5>Save $99.99!</h5>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <p>Feature List</p>
-              <p>Feature List</p>
-            </td> -->
-          </tr>
-        </tbody>
-      </table>
-
-      <div id="countdown">
-        <h1 id="counterTitle">2025 YKS'ye Kalan Süre</h1>
-        <div id="days"></div>
-        <div id="hours"></div>
-        <div id="minutes"></div>
-        <div id="seconds"></div>
-        <h3>Hayalindeki üniversite için geç kalma!</h3>
-      </div>
+<div class="index-page-container">
+    <div class="hero-section">
+        <h1>HAYALİNDEKİ ÜNİVERSİTE İÇİN <strong>ZERO AKADEMİ</strong></h1>
+        <img src="https://res.cloudinary.com/dj8prtw8j/image/upload/v1751984497/ComfyUI_00067_v4_aoyjlm.png" alt="Zero Akademi Logo" class="hero-logo">
     </div>
-  </body>
-</html>
+    <section id="countdown-section" class="full-width-section">
+        <div id="countdown">
+            <h2 id="counterTitle">2026 YKS'YE KALAN SÜRE</h2>
+            <div class="timer">
+                <div id="days"></div>
+                <div id="hours"></div>
+                <div id="minutes"></div>
+                <div id="seconds"></div>
+            </div>
+            <h3>Hayalindeki üniversite için geç kalma!</h3>
+        </div>
+    </section>
+    <section class="whatsapp-contact full-width-section">
+        <div class="contact-box">
+            <i class="fa-brands fa-whatsapp fa-3x"></i>
+            <h3>Bizimle İletişime Geçin</h3>
+            <p>Aklınızdaki soruları sormak, <strong>ücretsiz soru çözümü ve tavsiyelerimizden</strong> faydalanmak için topluluğumuza katılın.</p>
+            <a href="https://chat.whatsapp.com/Bh1VwlLxqgsFbFiu5KqSUe" class="whatsapp-button" target="_blank">Topluluğa Katıl!</a>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="features-container">
+            <h2 class="section-title">Neler Yapıyoruz?</h2>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <i class="fas fa-user-tie fa-2x"></i>
+                    <h3>Deneyimli Kadro</h3>
+                    <p>Hedeflerinize ulaşmakta daha emin adımlar atın; alanında uzman ve deneyimli koçlarımızla başarıya giden yolda ilerleyin.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-question-circle fa-2x"></i>
+                    <h3>Soru Çözüm</h3>
+                    <p>Takıldığınız her soruya anında çözüm desteği bulun ve farklı soru tipleri için etkili çözüm yolları öğrenerek netlerinizi hızla artırın.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-calendar-check fa-2x"></i>
+                    <h3>Günlük Program</h3>
+                    <p>Hazırlık sürecinizi en verimli şekilde yönetmek için size özel, gerçekçi ve kolayca takip edilebilir günlük çalışma programlarından faydalanın.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-comments fa-2x"></i>
+                    <h3>Anlık Mesajlaşma</h3>
+                    <p>Koçunuzla doğrudan ve hızlı iletişim kurarak aklınızdaki tüm soruları anında sorun, motivasyon ve rehberlik desteği alın.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-magnifying-glass-chart fa-2x"></i>
+                    <h3>Konu – Kaynak Analizi</h3>
+                    <p>Eksik olduğunuz konuları birlikte belirleyelim; seviyenize ve hedeflerinize en uygun, güncel kaynakları birlikte seçerek ilerleyin.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                    <h3>Detaylı Rapor</h3>
+                    <p>Performansınızı düzenli olarak takip edin; deneme sınavı sonuçlarınız ve gelişiminiz hakkında detaylı raporlar alarak stratejinizi sürekli güncel tutun.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="coaches-carousel-section">
+        <h2 class="section-title">Koçlarımızı Keşfedin</h2>
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <% if (typeof coaches !== 'undefined' && coaches.length > 0) { %>
+                    <% coaches.forEach(coach => { %>
+                        <a href="/coaches" class="coach-card">
+                            <img src="<%= coach.coachPicture.url %>" alt="<%= coach.name %>">
+                            <h4><%= coach.name %></h4>
+                            <p><%= coach.university %></p>
+                            <p>Sıralama: <%= coach.score %></p>
+                        </a>
+                    <% }); %>
+                    <!-- Duplicate for seamless loop -->
+                    <% coaches.forEach(coach => { %>
+                        <a href="/coaches" class="coach-card">
+                            <img src="<%= coach.coachPicture.url %>" alt="<%= coach.name %>">
+                            <h4><%= coach.name %></h4>
+                            <p><%= coach.university %></p>
+                            <p>Sıralama: <%= coach.score %></p>
+                        </a>
+                    <% }); %>
+                <% } else { %>
+                    <p>Koç bulunamadı.</p>
+                <% } %>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="/js/index-page.js"></script>

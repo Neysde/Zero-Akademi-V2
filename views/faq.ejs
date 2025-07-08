@@ -19,110 +19,23 @@
   </head>
   <body>
     <div class="wrapper">
-      <h1>Sıkça Sorulan Sorular</h1>
+      <h1 class="page-title">Sıkça Sorulan Sorular</h1>
 
-      <div class="faq">
-        <button class="accordion">
-          Koçluk sisteminiz nasıl?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>
-            Haftalık görüşme ve ödevlendirmenin yanı sıra deneme analizleriyle
-            net takip ve gelişim sistemimiz mevcut. Analizlerde tespit edilen
-            konu eksiklerine endeksli bir tekrar sistemimiz bulunuyor. Bunlara
-            ek olarak psikolojik destek ve motivasyon görüşmeleri, her gün
-            whatsapp iletişimi, soru çözüm grubu ve nicesi...
-          </p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Koçlarımızı kendimiz seçebiliyor muyuz?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>Tabii ki de kendinize en uygun koçu seçebilirsiniz.</p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Görüşmeler ne sıklıkla oluyor?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>
-            Görüşmeler haftada en az 1 kez olmaktadır ve koçunuzla her gün
-            iletişime geçebilirsiniz.
-          </p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Görüşmeler hangi program üzerinden olmaktadır?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>Görüşmeler zoom ve google meet üzerinden olabilmektedir.</p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Kaynak ve kanal önerisi var mı?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>
-            Çözülecek kitaplar vs. zaten koçluk sürecinde sizin ihtiyaçlarınıza
-            göre belirlenmektedir. Genel kitap önerisi için de YouTube
-            kanalımızı takip edebilirsiniz.
-          </p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Koçluk ücreti nedir?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>
-            <strong>2024 Yılına Özel Koçluk Ücreti</strong> 1 Aylık 2299₺, 3
-            Aylık 5999₺, Sınava kadar 12999₺
-          </p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Koçumdan memnun kalmazsam değiştirebilir miyim?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>
-            Koçunuzdan memnun kalacağınızı düşünüyoruz ancak yine de memnun
-            kalmazsanız 3 Aylık pakette 2 kez, Sınava kadar olan pakette ise
-            sınırsız değişim hakkı bulunmaktadır.
-          </p>
-        </div>
-      </div>
-
-      <div class="faq">
-        <button class="accordion">
-          Zero Akademi'nin hizmetlerinden kim faydalanabilir?
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="pannel">
-          <p>
-            Zero Akademi'nin hizmetlerinden YKS'ye girecek her öğrenci
-            faydalanabilmektedir.
-          </p>
-        </div>
-      </div>
+      <% if (faqs && faqs.length > 0) { %>
+        <% faqs.forEach(faq => { %>
+          <div class="faq">
+            <button class="accordion">
+              <%- faq.question.replace(/\n/g, '<br>') %>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="pannel">
+              <p><%- faq.answer.replace(/\n/g, '<br>') %></p>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>Sıkça sorulan soru bulunamadı.</p>
+      <% } %>
     </div>
 
     <script>
@@ -130,16 +43,13 @@
       var i;
 
       for (i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function () {
+        acc[i].addEventListener("click", function() {
           this.classList.toggle("active");
-          this.parentElement.classList.toggle("active");
-
           var pannel = this.nextElementSibling;
-
-          if (pannel.style.display === "block") {
-            pannel.style.display = "none";
+          if (pannel.style.maxHeight) {
+            pannel.style.maxHeight = null;
           } else {
-            pannel.style.display = "block";
+            pannel.style.maxHeight = pannel.scrollHeight + "px";
           }
         });
       }

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adapted Preview: Refined & Vibrant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;700&display=swap');
+
+        /* --- Project-Aligned Color Palette --- */
+        /* This palette is derived from the project's existing CSS files (style.css, card.css) 
+           to ensure design consistency. */
+        :root {
+            --color-primary: #e7662b;      /* Main orange accent from the project. */
+            --color-secondary: #eb926a;    /* Secondary orange from the footer. */
+            --color-background: #fff4ed;  /* Warm, creamy background from card.css. */
+            --color-surface: #ffffff;      /* White surfaces for cards and forms. */
+            --color-border: #dddddd;      /* Subtle border color for contrast. */
+            --color-text-primary: #212529;    /* Dark, readable text. */
+            --color-text-secondary: #888888;   /* Muted gray for secondary text. */
+            --color-text-on-primary: #ffffff; /* White text for buttons/dark backgrounds. */
+        }
+
+        body {
+            /* Using Hind Siliguri as seen in the project's EJS and CSS files. */
+            font-family: 'Hind Siliguri', sans-serif;
+            margin: 0;
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+        
+        h1, h2, h3 { 
+            font-weight: 700; 
+            line-height: 1.3; 
+            color: var(--color-primary);
+        }
+        h1 { font-size: 3rem; color: var(--color-text-primary); }
+        h2 { font-size: 2.2rem; text-align: center; margin-bottom: 50px; }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: rgba(255, 244, 237, 0.8); /* Semi-transparent background matching the light theme */
+            backdrop-filter: blur(10px);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .logo { font-size: 1.6rem; font-weight: 700; text-decoration: none; color: var(--color-primary); }
+        .nav a {
+            margin-left: 30px;
+            text-decoration: none;
+            color: var(--color-text-primary);
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+        .nav a:hover { color: var(--color-primary); }
+
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(180deg, var(--color-background) 0%, #fdecdf 100%);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-text-secondary);
+            max-width: 650px;
+            margin: 20px auto 40px;
+        }
+        .cta-button {
+            background-color: var(--color-primary);
+            color: var(--color-text-on-primary);
+            padding: 16px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cta-button:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 20px rgba(231, 102, 43, 0.2); 
+        }
+        
+        /* --- Content Cards --- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background-color: var(--color-surface);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.06), 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+        .card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-content { padding: 30px; }
+        .card h3 { margin-top: 0; color: var(--color-primary); }
+
+        /* --- Form Section --- */
+        .form-section {
+            background-color: var(--color-surface);
+            padding: 50px;
+            border-radius: 16px;
+            margin-top: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid var(--color-border);
+        }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 10px; color: var(--color-text-secondary); }
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 50px;
+            background: var(--color-primary); /* Blending primary and secondary colors for a more appealing look */
+            color: var(--color-text-on-primary);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .nav a { margin-left: 15px; font-size: 0.9rem; }
+            h1 { font-size: 2.5rem; }
+            .hero { padding: 80px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="#" class="logo">StyleCraft</a>
+        <nav class="nav">
+            <a href="#">Home</a>
+            <a href="#">Features</a>
+            <a href="#">Pricing</a>
+            <a href="#">Blog</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Crafting Digital Excellence</h1>
+            <p>A refined, responsive design built to be both engaging and professional. Modern aesthetics meet powerful functionality, adapted for your project.</p>
+            <a href="#" class="cta-button">Explore Our Work</a>
+        </section>
+        
+        <div class="container">
+            <h2>Core Services</h2>
+            <section class="card-grid">
+                <div class="card">
+                    <img src="https://picsum.photos/id/431/400/200" alt="Service 1">
+                    <div class="card-content">
+                        <h3>Web Architecture</h3>
+                        <p>We build scalable and robust web platforms that serve as the foundation for your digital success.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://picsum.photos/id/57/400/200" alt="Service 2">
+                    <div class="card-content">
+                        <h3>Interactive UI/UX</h3>
+                        <p>Designing intuitive, beautiful, and accessible interfaces that users love to interact with.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://picsum.photos/id/2/400/200" alt="Service 3">
+                    <div class="card-content">
+                        <h3>Cloud Integration</h3>
+                        <p>Leveraging cloud-native services to deploy, manage, and scale your applications efficiently.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="form-section">
+                <h2>Get in Touch</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" placeholder="e.g., Jane Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" placeholder="e.g., jane.doe@example.com">
+                    </div>
+                    <button type="submit" class="cta-button" style="width: 100%; text-align: center; box-sizing: border-box;">Send Message</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 StyleCraft. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

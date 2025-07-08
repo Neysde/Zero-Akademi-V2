@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Koçlarımız</title>
     <link rel="icon" type="image/png" href="images\ComfyUI_00067_v4.png" />
+    <link rel="stylesheet" href="/css/coaches-page.css" />
     <link rel="stylesheet" href="/css/card.css" />
     <link rel="stylesheet" href="/css/style.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="/js/fetch-coaches.mjs"></script> 
+    <script src="/js/fetch-coaches.mjs"></script>
     <!-- <script src="card.js"></script> -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,28 +21,261 @@
     <script
       src="https://kit.fontawesome.com/6f6e08889e.js"
       crossorigin="anonymous"
-
-      
     ></script>
+            <style>
+      .page-title {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
 
-    
+      /* Mobile-first: Stacked, full-width buttons */
+      .filter-buttons {
+        display: flex;
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; /* Center the stack */
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      .filter-button {
+        width: 100%; /* Each button takes a full line */
+        max-width: 400px; /* Optional: prevent buttons from being too wide */
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        text-align: center;
+      }
+
+      /* Desktop layout: Single row, uniform-width buttons */
+      @media (min-width: 768px) {
+        .filter-buttons {
+          flex-direction: row; /* Switch to horizontal layout */
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .filter-button {
+          width: 140px; /* Restore fixed width for desktop */
+        }
+      }
+
+      .close-modal-btn::before {
+        content: "×";
+      }
+    </style>
   </head>
   <body>
-    <div id="bg-color">
-      
+    <div class="container">
+      <h2 class="page-title">Koçlarımız</h2>
 
-      <div class="card-container" >
-        <div class="button" id="btnEa" style="width: 20%; background-color: #F97316; border: none; font-weight: bold; color: white;">Eşit Ağırlık</div>
-        <div class="button" id="btnMf" style="width: 20%; background-color: #F97316; border: none; font-weight: bold; color: white;">Sayısal</div>
-        <div class="button" id="btnSoz" style="width: 20%; background-color: #F97316; border: none; font-weight: bold; color: white;">Sözel</div>
-        <div class="button" id="btnAll" style="width: 20%; background-color: #F97316; border: none; font-weight: bold; color: white;">Hepsi</div>
+      <div class="filter-buttons"></div>
+
+      <div class="coaches-grid" id="coaches-container">
+        <!-- Coach cards will be dynamically inserted here -->
       </div>
-      
-      <div class="card-container" id="coaches-container"></div>
+    </div>
 
-    
-      
+    <!-- Modal structure for displaying coach details -->
+    <div id="coach-modal-overlay" class="modal-overlay"></div>
+    <div id="coach-modal" class="modal">
+      <!-- Modal content will be injected here by the script -->
     </div>
-    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const buttonContainer = document.querySelector(".filter-buttons");
+        const coachesContainer = document.getElementById("coaches-container");
+        const modal = document.getElementById("coach-modal");
+        const overlay = document.getElementById("coach-modal-overlay");
+
+        let coachesData = []; // Global store for all coaches
+
+        // --- Dynamic Content Rendering ---
+        function displayCoaches(coaches) {
+            while (coachesContainer.firstChild) {
+                coachesContainer.removeChild(coachesContainer.firstChild);
+            }
+
+            coaches.forEach((coach) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.dataset.id = coach._id;
+
+                const topDiv = document.createElement("div");
+                topDiv.className = "top";
+
+                const nameH3 = document.createElement("h3");
+                nameH3.textContent = coach.name;
+
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "img-container";
+
+                if (coach.coachPicture && coach.coachPicture.url) {
+                    const coachImg = document.createElement("img");
+                    coachImg.src = coach.coachPicture.url;
+                    coachImg.alt = coach.name;
+                    imgContainer.appendChild(coachImg);
+                }
+                topDiv.appendChild(nameH3);
+                topDiv.appendChild(imgContainer);
+
+                const aboutLink = document.createElement("a");
+                aboutLink.href = "#";
+                aboutLink.className = "hakkinda-link";
+
+                const infoIcon = document.createElement("i");
+                infoIcon.className = "fa fa-info-circle";
+                aboutLink.appendChild(infoIcon);
+                aboutLink.appendChild(document.createTextNode(" Hakkında"));
+
+                const listUl = document.createElement("ul");
+                listUl.className = "list";
+
+                const details = [
+                    { icon: "fa-graduation-cap", text: coach.university },
+                    { icon: "fa-book", text: coach.program },
+                    { icon: "fa-check-circle", text: coach.score, liClass: "score-item" },
+                ];
+
+                details.forEach(detail => {
+                    if (!detail.text) return; // Don't render empty details
+                    const li = document.createElement("li");
+                    if (detail.liClass) li.className = detail.liClass;
+
+                    const a = document.createElement("a");
+                    const i = document.createElement("i");
+                    i.className = `fa ${detail.icon}`;
+
+                    a.appendChild(i);
+                    a.appendChild(document.createTextNode(` ${detail.text}`));
+                    li.appendChild(a);
+                    listUl.appendChild(li);
+                });
+
+                card.appendChild(topDiv);
+                card.appendChild(aboutLink);
+                card.appendChild(listUl);
+
+                coachesContainer.appendChild(card);
+            });
+        }
+
+        function renderFilterButtons(coaches) {
+            while (buttonContainer.firstChild) {
+                buttonContainer.removeChild(buttonContainer.firstChild);
+            }
+
+            const fields = [...new Set(coaches.flatMap(c => c.field || []))].sort();
+
+            fields.forEach(field => {
+                const button = document.createElement('button');
+                button.className = 'filter-button';
+                button.dataset.field = field;
+                button.textContent = field;
+                buttonContainer.appendChild(button);
+            });
+
+            const allButton = document.createElement('button');
+            allButton.className = 'filter-button active';
+            allButton.dataset.field = 'Hepsi';
+            allButton.textContent = 'Hepsi';
+            buttonContainer.appendChild(allButton);
+        }
+
+        // --- Event Listeners and Initialization ---
+        if (window.fetchCoaches) {
+            window.fetchCoaches().then(data => {
+                coachesData = data;
+                renderFilterButtons(coachesData);
+                displayCoaches(coachesData);
+            });
+        }
+
+        buttonContainer.addEventListener('click', e => {
+            if (e.target.matches('.filter-button')) {
+                const selectedField = e.target.dataset.field;
+
+                document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const filteredCoaches = selectedField === 'Hepsi'
+                    ? coachesData
+                    : coachesData.filter(c => c.field && c.field.includes(selectedField));
+                
+                displayCoaches(filteredCoaches);
+            }
+        });
+
+        // --- Modal Interaction Logic (preserved) ---
+        const openModal = (coach) => {
+            if (!coach || !coach.examResultImage || !coach.examResultImage.url) return;
+            while (modal.firstChild) modal.removeChild(modal.firstChild);
+
+            const closeButton = document.createElement("button");
+            closeButton.className = "close-modal-btn";
+
+            const modalContent = document.createElement("div");
+            modalContent.className = "modal-content";
+
+            const examImg = document.createElement("img");
+            examImg.src = coach.examResultImage.url;
+            examImg.alt = `${coach.name} - Sınav Sonucu`;
+            examImg.className = "modal-coach-img";
+
+            const nameH3 = document.createElement("h3");
+            nameH3.textContent = coach.name;
+
+            const aboutP = document.createElement("p");
+            aboutP.style.whiteSpace = "pre-wrap";
+            aboutP.textContent = coach.about;
+
+            modalContent.appendChild(examImg);
+            modalContent.appendChild(nameH3);
+            modalContent.appendChild(aboutP);
+
+            modal.appendChild(closeButton);
+            modal.appendChild(modalContent);
+
+            const scrollArrow = document.createElement("div");
+            scrollArrow.className = "scroll-down-arrow";
+            modal.appendChild(scrollArrow);
+
+            modal.classList.add("visible");
+            overlay.classList.add("visible");
+            document.body.classList.add("no-scroll");
+
+            setTimeout(() => {
+                if (modalContent.scrollHeight > modalContent.clientHeight) {
+                    scrollArrow.classList.add("visible");
+                    scrollArrow.addEventListener("click", () => modalContent.scrollTo({ top: modalContent.scrollHeight, behavior: "smooth" }));
+                    modalContent.addEventListener("scroll", () => scrollArrow.classList.remove("visible"), { once: true });
+                }
+            }, 150);
+        };
+
+        const closeModal = () => {
+            modal.classList.remove("visible");
+            overlay.classList.remove("visible");
+            document.body.classList.remove("no-scroll");
+            while (modal.firstChild) modal.removeChild(modal.firstChild);
+        };
+
+        coachesContainer.addEventListener("click", event => {
+            const card = event.target.closest(".card");
+            const trigger = event.target.closest(".hakkinda-link");
+            if (trigger && card) {
+                event.preventDefault();
+                const coachId = card.dataset.id;
+                const coach = coachesData.find(c => c._id === coachId);
+                openModal(coach);
+            }
+        });
+
+        modal.addEventListener("click", event => {
+            if (event.target.classList.contains("close-modal-btn")) closeModal();
+        });
+
+        overlay.addEventListener("click", closeModal);
+      });
+    </script>
   </body>
 </html>

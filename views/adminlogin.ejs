@@ -130,9 +130,12 @@
     <script src="/js/fetch-admin.mjs"></script>
   </head>
   <body>
+    <script>
+      window.BASE_URL = "<%- BASE_URL %>";
+    </script>
     <div class="login-container">
       <h1>Admin Login</h1>
-      <form method="POST" action="http://localhost:3000/api/admin/login">
+      <form method="POST" action="<%- BASE_URL %>/api/admin/login">
         <div class="form-group">
           <label for="username">Username</label>
           <input

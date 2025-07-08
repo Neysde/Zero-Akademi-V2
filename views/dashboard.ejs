@@ -1,29 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head></head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #f1f5f9;
+        color: #1e293b;
+        margin: 0;
+      }
+
+      body.modal-open {
+        overflow: hidden;
+      }
+
       .admin-panel {
         max-width: 1200px;
         margin: 2rem auto;
         padding: 1rem;
+        text-align: center;
       }
 
       .coach-table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 1rem;
+        background-color: white;
+        border-radius: 0.5rem;
+        overflow: hidden; /* For rounded corners on the table */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       }
 
       .coach-table th,
       .coach-table td {
-        padding: 0.75rem;
-        border: 1px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
         text-align: left;
       }
 
       .coach-table th {
         background-color: #f8fafc;
         font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+      }
+
+      .coach-table tr:last-child td {
+          border-bottom: none;
       }
 
       .action-buttons {
@@ -50,6 +77,9 @@
         border-radius: 8px;
         width: 90%;
         max-width: 600px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 85vh;
+        overflow-y: auto;
       }
 
       /* Base button styling */
@@ -67,63 +97,45 @@
 
       /* Primary action buttons (Add, Edit, Save) */
       .button-primary {
-        background-color: #F97316; /* Your orange color */
+        background-color: #F97316;
         color: white;
-        border: 1px solid transparent; /* Ensure consistent border */
       }
 
       .button-primary:hover {
-        background-color: #EA580C; /* Slightly darker orange */
+        background-color: #EA580C;
         transform: translateY(-1px);
-        border-color: transparent; /* Remove any border color */
       }
 
       /* Secondary action buttons (Cancel) */
       .button-secondary {
-        background-color: #f1f5f9; /* Light gray */
-        color: #1e293b; /* Dark gray */
-        border: 1px solid #cbd5e1; /* Border gray */
+        background-color: #f1f5f9;
+        color: #1e293b;
+        border: 1px solid #cbd5e1;
       }
 
       .button-secondary:hover {
-        background-color: #e2e8f0; /* Slightly darker gray */
-        border-color: transparent; /* Remove border color */
-        color: #1e293b; /* Maintain black text on hover */
+        background-color: #e2e8f0;
       }
 
       /* Danger action buttons (Delete) */
       .button-danger {
-        background-color: #ef4444; /* Red */
+        background-color: #ef4444;
         color: white;
-        border: 1px solid transparent; /* Ensure consistent border */
       }
 
       .button-danger:hover {
-        background-color: #dc2626; /* Darker red */
+        background-color: #dc2626;
         transform: translateY(-1px);
-        border-color: transparent; /* Remove border color */
       }
 
-      /* Responsive button sizing */
-      @media (max-width: 768px) {
-        .button {
-          padding: 0.6rem 1rem;
-          font-size: 0.9rem;
-        }
+      /* Styling for sortable list */
+      .sortable-ghost {
+        opacity: 0.4;
+        background-color: #fde68a;
       }
 
-      /* Action buttons container */
-      .action-buttons {
-        display: flex;
-        gap: 0.8rem;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-      }
-
-      /* Table action buttons */
-      .coach-table .action-buttons {
-        margin-top: 0;
-        justify-content: flex-start;
+      #coaches-list tr {
+        cursor: grab;
       }
 
       /* Modal button container */
@@ -134,50 +146,300 @@
 
       /* Add New Coach button */
       .add-coach-button {
-        margin: 0 auto 1.5rem; /* Center horizontally with auto margins */
-        display: block; /* Make it a block element for centering */
-        width: 100%;
-        max-width: 200px;
+        margin-bottom: 1.5rem;
       }
 
       /* Coach Management title */
-      .admin-panel h1 {
-        margin-bottom: 1rem; /* Space below the title */
+      .tabs {
+        display: flex;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
       }
 
-      /* Responsive table actions */
-      @media (max-width: 480px) {
-        .coach-table .action-buttons {
-          flex-direction: column;
-          gap: 0.5rem;
+      .tab-button {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #475569;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .tab-button.active, .tab-button:hover {
+        color: #F97316;
+        border-bottom-color: #F97316;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .admin-panel h1 {
+        font-size: 1.875rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .filter-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .button-filter {
+        width: 100%;
+      }
+
+      /* --- Multi-select Dropdown --- */
+      .multi-select-container {
+        position: relative;
+      }
+
+      .select-box {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        min-height: 48px; /* Match other inputs */
+      }
+
+      .select-box:focus-within {
+        border-color: #F97316;
+      }
+
+      .pills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .pill {
+        display: flex;
+        align-items: center;
+        background-color: #f97316;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.9rem;
+      }
+
+      .pill .remove-pill {
+        margin-left: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .options-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #cbd5e1;
+        border-top: none;
+        border-radius: 0 0 0.375rem 0.375rem;
+        z-index: 1001;
+        display: none; /* Hidden by default */
+      }
+
+      .options-list label {
+        display: block;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+      }
+
+      .options-list label:hover {
+        background-color: #f1f5f9;
+      }
+
+      .options-list input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+
+      /* Form group styling */
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-group input[type="text"],
+      .form-group input[type="file"],
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.375rem;
+        box-sizing: border-box; /* Important for padding and width */
+        transition: border-color 0.2s ease-in-out;
+      }
+
+      .form-group input:focus, .form-group textarea:focus {
+          outline: none;
+          border-color: #F97316;
+      }
+
+      .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .image-preview img {
+        max-width: 100px;
+        margin-top: 10px;
+        border-radius: 0.375rem;
+      }
+
+      /* --- Responsive Design --- */
+      @media (max-width: 768px) {
+        .admin-panel {
+            padding: 1rem;
         }
-        
-        .coach-table .action-buttons .button {
+
+        .coach-table thead {
+          display: none; /* Hide table headers on mobile */
+        }
+
+        .coach-table, .coach-table tbody, .coach-table tr, .coach-table td {
+          display: block;
           width: 100%;
         }
+
+        .coach-table tr {
+          margin-bottom: 1rem;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.5rem;
+          padding: 0;
+          box-shadow: none;
+        }
+
+        .coach-table td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.75rem 1rem;
+          border: none;
+          border-bottom: 1px solid #e2e8f0;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+        
+        .coach-table tr td:last-child {
+            border-bottom: none;
+        }
+
+        .coach-table td::before {
+          content: attr(data-label);
+          font-weight: 600;
+          margin-right: 1rem;
+        }
+
+        .coach-table td.action-buttons {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .coach-table td.action-buttons::before {
+            display: none; /* Hide label for action buttons container */
+        }
+
+        .coach-table .action-buttons .button {
+            width: 100%;
+            text-align: center;
+        }
+
+        .add-coach-button {
+            width: 100%;
+        }
       }
+
     </style>
   </head>
   <body>
     <div class="admin-panel">
-      <h1>Coach Management</h1>
-      <button onclick="openCoachModal()" class="button button-primary add-coach-button">Add New Coach</button>
+      <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'coach-management')">Coach Management</button>
+        <button class="tab-button" onclick="openTab(event, 'faq-management')">Frequently Asked Questions</button>
+      </div>
+
+      <div id="coach-management" class="tab-content" style="display: block;">
+        <h1>Coach Management</h1>
+        <button onclick="openCoachModal()" class="button button-primary add-coach-button">Add New Coach</button>
+
+      <!-- Filter Buttons -->
+      <div id="filter-container" class="filter-buttons"></div>
 
       <!-- Coaches Table -->
-      <table class="coach-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>University</th>
-            <th>Program</th>
-            <th>Field</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="coaches-list">
-          <!-- Dynamic content will be inserted here -->
-        </tbody>
-      </table>
+      <div style="overflow-x: auto;">
+        <table class="coach-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>University</th>
+              <th>Program</th>
+              <th>Field</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="coaches-list">
+            <!-- Dynamic content will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+      <div id="faq-management" class="tab-content" style="display: none;">
+        <h1>Frequently Asked Questions</h1>
+        <button onclick="openFaqModal()" class="button button-primary">Add New Question</button>
+        <div style="overflow-x: auto;">
+          <table class="coach-table">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="faqs-list">
+              <!-- Dynamic content will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FAQ Modal -->
+      <div class="modal-overlay" id="faqModal">
+        <div class="modal-content">
+          <h2 id="faqModalTitle">Add New Question</h2>
+          <form id="faqForm">
+            <input type="hidden" id="faqId" name="faqId" />
+            <div class="form-group">
+              <label for="question">Question</label>
+              <textarea id="question" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="answer">Answer</label>
+              <textarea id="answer" required></textarea>
+            </div>
+            <div class="action-buttons">
+              
+              <button type="submit" class="button button-primary">Save</button>
+              <button type="button" class="button button-secondary" onclick="closeFaqModal()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <!-- Coach Modal -->
       <div class="modal-overlay" id="coachModal">
@@ -204,7 +466,18 @@
 
             <div class="form-group">
               <label for="field">Field</label>
-              <input type="text" id="field" required />
+              <div class="multi-select-container" id="field-multi-select">
+                <div class="select-box" tabindex="0">
+                  <div class="pills-container"></div>
+                </div>
+                <div class="options-list">
+                  <label><input type="checkbox" value="Sayısal"/> Sayısal</label>
+                  <label><input type="checkbox" value="Eşit Ağırlık"/> Eşit Ağırlık</label>
+                  <label><input type="checkbox" value="Sözel"/> Sözel</label>
+                  <label><input type="checkbox" value="Dil"/> Dil</label>
+                </div>
+              </div>
+              <input type="hidden" id="field" name="field" />
             </div>
 
             <div class="form-group">
@@ -217,14 +490,22 @@
               <textarea id="about"></textarea>
             </div>
 
+            <!-- Coach Picture Upload -->
             <div class="form-group">
-              <label for="imageUrl">Image URL</label>
-              <input type="text" id="imageUrl" />
+              <label for="coachPicture">Upload Coach Image</label>
+              <input type="file" id="coachPicture" accept="image/*" />
+              <div id="coachPicturePreview" class="image-preview"></div>
+              <input type="hidden" id="coachPictureUrl" />
+              <input type="hidden" id="coachPicturePublicId" />
             </div>
 
+            <!-- Exam Result Image Upload -->
             <div class="form-group">
-              <label for="examResultUrl">Exam Result URL</label>
-              <input type="text" id="examResultUrl" />
+              <label for="examResultImage">Upload Exam Result</label>
+              <input type="file" id="examResultImage" accept="image/*" />
+              <div id="examResultImagePreview" class="image-preview"></div>
+              <input type="hidden" id="examResultImageUrl" />
+              <input type="hidden" id="examResultImagePublicId" />
             </div>
 
             <!-- Modal Buttons -->
@@ -238,14 +519,325 @@
     </div>
 
     <script>
-      // Load coaches on initial load
-      document.addEventListener("DOMContentLoaded", fetchCoaches);
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      // FAQ Management
+      function getFaqElements() {
+          return {
+              modal: document.getElementById("faqModal"),
+              form: document.getElementById("faqForm"),
+              modalTitle: document.getElementById("faqModalTitle"),
+              list: document.getElementById("faqs-list")
+          };
+      }
+
+      async function loadFaqs() {
+        try {
+          const response = await fetch("/api/faqs");
+          const faqs = await response.json();
+          renderFaqs(faqs);
+        } catch (error) {
+          console.error("Error loading FAQs:", error);
+        }
+      }
+
+      function renderFaqs(faqs) {
+        const { list } = getFaqElements();
+        list.innerHTML = "";
+        faqs.forEach(faq => {
+          const row = document.createElement("tr");
+          row.setAttribute("data-id", faq._id);
+          row.innerHTML = `
+            <td data-label="Question">${faq.question.replace(/\n/g, '<br>')}</td>
+            <td data-label="Answer">${faq.answer.replace(/\n/g, '<br>')}</td>
+            <td class="action-buttons">
+              <button class="button button-primary" onclick="editFaq('${faq._id}')">Edit</button>
+              <button class="button button-danger" onclick="deleteFaq('${faq._id}')">Delete</button>
+            </td>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      function openFaqModal(id = null) {
+        const { modal, form, modalTitle } = getFaqElements();
+        form.reset();
+        document.getElementById("faqId").value = "";
+        if (id) {
+          modalTitle.textContent = "Edit Question";
+          fetch(`/api/faqs/${id}`)
+            .then(res => res.json())
+            .then(faq => {
+              document.getElementById("faqId").value = faq._id;
+              document.getElementById("question").value = faq.question;
+              document.getElementById("answer").value = faq.answer;
+            });
+        } else {
+          modalTitle.textContent = "Add New Question";
+        }
+        modal.style.display = "flex";
+        document.body.classList.add("modal-open");
+      }
+
+      function closeFaqModal() {
+        const { modal } = getFaqElements();
+        modal.style.display = "none";
+        document.body.classList.remove("modal-open");
+      }
+
+      async function editFaq(id) {
+        openFaqModal(id);
+      }
+
+      async function deleteFaq(id) {
+        if (confirm("Are you sure you want to delete this FAQ?")) {
+          try {
+            const response = await fetch(`/api/faqs/${id}`, { method: "DELETE" });
+            if (response.ok) {
+              loadFaqs();
+            } else {
+              console.error("Failed to delete FAQ");
+            }
+          } catch (error) {
+            console.error("Error deleting FAQ:", error);
+          }
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const { form, list } = getFaqElements();
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const id = document.getElementById("faqId").value;
+            const question = document.getElementById("question").value;
+            const answer = document.getElementById("answer").value;
+
+            const method = id ? "PUT" : "POST";
+            const url = id ? `/api/faqs/${id}` : "/api/faqs";
+
+            try {
+            const response = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question, answer }),
+            });
+
+            if (response.ok) {
+                closeFaqModal();
+                loadFaqs();
+            } else {
+                console.error("Failed to save FAQ");
+            }
+            } catch (error) {
+            console.error("Error saving FAQ:", error);
+            }
+        });
+
+        new Sortable(list, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: async function (evt) {
+            const orderedIds = Array.from(list.children).map(child => child.getAttribute('data-id'));
+            try {
+                await fetch('/api/faqs/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderedIds })
+                });
+            } catch (error) {
+                console.error('Failed to reorder FAQs:', error);
+            }
+            }
+        });
+      });
+
+      // Load coaches and initialize SortableJS on initial load
+      function setupMultiSelect() {
+        const container = document.getElementById('field-multi-select');
+        const selectBox = container.querySelector('.select-box');
+        const optionsList = container.querySelector('.options-list');
+        const pillsContainer = container.querySelector('.pills-container');
+        const hiddenInput = document.getElementById('field');
+        const checkboxes = optionsList.querySelectorAll('input[type="checkbox"]');
+
+        selectBox.addEventListener('click', () => {
+          optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                optionsList.style.display = 'none';
+            }
+        });
+
+        checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', updateSelection);
+        });
+
+        function updateSelection() {
+          const selectedValues = [];
+          pillsContainer.innerHTML = '';
+          checkboxes.forEach(cb => {
+            if (cb.checked) {
+              selectedValues.push(cb.value);
+              const pill = document.createElement('div');
+              pill.className = 'pill';
+              pill.textContent = cb.value;
+              const removeBtn = document.createElement('span');
+              removeBtn.className = 'remove-pill';
+              removeBtn.innerHTML = '&times;';
+              removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cb.checked = false;
+                updateSelection();
+              });
+              pill.appendChild(removeBtn);
+              pillsContainer.appendChild(pill);
+            }
+          });
+          hiddenInput.value = selectedValues.join(',');
+        }
+
+        window.resetMultiSelect = () => {
+            checkboxes.forEach(cb => cb.checked = false);
+            updateSelection();
+        };
+
+        window.setMultiSelectValues = (fieldValue) => {
+            resetMultiSelect();
+            let values = [];
+            if (typeof fieldValue === 'string') {
+                values = fieldValue.split(',');
+            } else if (Array.isArray(fieldValue)) {
+                values = fieldValue;
+            }
+
+            checkboxes.forEach(cb => {
+                if (values.includes(cb.value)) {
+                    cb.checked = true;
+                }
+            });
+            
+            updateSelection();
+        };
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        setupMultiSelect();
+        fetchCoaches();
+        loadFaqs();
+
+        const el = document.getElementById('coaches-list');
+        const sortable = Sortable.create(el, {
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+          onEnd: async function (evt) {
+            const rows = Array.from(el.children);
+            const orderedIds = rows.map(row => row.dataset.id);
+
+            try {
+              const response = await fetch('/api/coaches/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderedIds }),
+              });
+
+              if (!response.ok) {
+                throw new Error('Failed to reorder coaches.');
+              }
+              console.log('Coaches reordered successfully!');
+            } catch (error) {
+              console.error('Error reordering coaches:', error);
+              alert('An error occurred while reordering.');
+              fetchCoaches(); // Revert to original order on failure
+            }
+          },
+        });
+      });
+
+      let allCoaches = []; // Global store for all coaches
+
+      function renderFilterButtons(coaches) {
+        const container = document.getElementById('filter-container');
+        if (!container) return;
+
+        // Clear previous buttons safely without using innerHTML
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Robustly extract all unique fields, handling arrays, strings, and nulls
+        const fields = [...new Set(coaches.flatMap(c => {
+            if (Array.isArray(c.field)) return c.field;
+            if (typeof c.field === 'string' && c.field.length > 0) return c.field.split(',').map(s => s.trim());
+            return []; // Return empty array for null, undefined, or empty strings
+        }).filter(Boolean))].sort(); // Filter out any potential null/empty values and sort
+
+        // Create and append a button for each field
+        fields.forEach(field => {
+            const button = document.createElement('button');
+            button.className = 'button button-secondary button-filter';
+            button.dataset.field = field;
+            button.textContent = field;
+            container.appendChild(button);
+        });
+
+        // Create and append the 'Hepsi' button
+        const allButton = document.createElement('button');
+        allButton.className = 'button button-primary button-filter active';
+        allButton.dataset.field = 'Hepsi';
+        allButton.textContent = 'Hepsi';
+        container.appendChild(allButton);
+
+        // Add the event listener only once
+        if (!container.dataset.listenerAttached) {
+            container.addEventListener('click', (e) => {
+                if (!e.target.matches('.button-filter')) return;
+
+                const selectedField = e.target.dataset.field;
+
+                container.querySelectorAll('.button-filter').forEach(btn => {
+                    btn.classList.remove('button-primary', 'active');
+                    btn.classList.add('button-secondary');
+                });
+
+                e.target.classList.add('button-primary', 'active');
+                e.target.classList.remove('button-secondary');
+
+                filterTable(selectedField);
+            });
+            container.dataset.listenerAttached = 'true';
+        }
+      }
+
+      function filterTable(field) {
+        if (field === 'Hepsi') {
+          populateTable(allCoaches);
+        } else {
+          const filteredCoaches = allCoaches.filter(coach => coach.field.includes(field));
+          populateTable(filteredCoaches);
+        }
+      }
 
       async function fetchCoaches() {
         try {
           const response = await fetch("/api/coaches");
-          const coaches = await response.json();
-          populateTable(coaches);
+          allCoaches = await response.json();
+          renderFilterButtons(allCoaches);
+          populateTable(allCoaches);
         } catch (error) {
           console.error("Error fetching coaches:", error);
         }
@@ -256,12 +848,12 @@
         tbody.innerHTML = coaches
           .map(
             (coach) => `
-                <tr>
-                    <td>${coach.name}</td>
-                    <td>${coach.university}</td>
-                    <td>${coach.program}</td>
-                    <td>${coach.field}</td>
-                    <td class="action-buttons">
+                <tr data-id="${coach._id}">
+                    <td data-label="Name">${coach.name}</td>
+                    <td data-label="University">${coach.university}</td>
+                    <td data-label="Program">${coach.program}</td>
+                    <td data-label="Field">${coach.field}</td>
+                    <td data-label="Actions" class="action-buttons">
                         <button onclick="editCoach('${coach._id}')" class="button button-primary">Edit</button>
                         <button onclick="deleteCoach('${coach._id}')" class="button button-danger">Delete</button>
                     </td>
@@ -271,84 +863,100 @@
           .join("");
       }
 
-      // Modal handling functions
+      async function uploadImage(file, fieldName, oldPublicId = null) {
+        const formData = new FormData();
+        formData.append(fieldName, file);
+        if (oldPublicId) formData.append("oldPublicId", oldPublicId);
+
+        try {
+          const response = await fetch("/api/upload-image", {
+            method: "POST",
+            credentials: "same-origin",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Image upload failed");
+          }
+          return await response.json();
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          alert(`Failed to upload image: ${error.message}`);
+          return null;
+        }
+      }
+
+      document.getElementById("coachPicture").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const oldPublicId = document.getElementById("coachPicturePublicId").value;
+        const result = await uploadImage(file, "coachPicture", oldPublicId);
+        if (result && result.success) {
+          const { url, publicId } = result.data;
+          document.getElementById("coachPictureUrl").value = url;
+          document.getElementById("coachPicturePublicId").value = publicId;
+          document.getElementById("coachPicturePreview").innerHTML = `<img src="${url}" alt="Coach Preview"/>`;
+        }
+      });
+
+      document.getElementById("examResultImage").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const oldPublicId = document.getElementById("examResultImagePublicId").value;
+        const result = await uploadImage(file, "examResultImage", oldPublicId);
+        if (result && result.success) {
+          const { url, publicId } = result.data;
+          document.getElementById("examResultImageUrl").value = url;
+          document.getElementById("examResultImagePublicId").value = publicId;
+          document.getElementById("examResultImagePreview").innerHTML = `<img src="${url}" alt="Exam Result Preview"/>`;
+        }
+      });
+
       function openCoachModal(coachData = null) {
         const modal = document.getElementById("coachModal");
         const modalTitle = document.getElementById("modalTitle");
-        
-        // Set modal title based on whether we're editing or adding
         modalTitle.textContent = coachData ? "Edit Coach" : "Add New Coach";
         
-        // Clear form fields when adding new coach
-        if (!coachData) {
-          document.getElementById("coachId").value = "";
-          document.getElementById("name").value = "";
-          document.getElementById("university").value = "";
-          document.getElementById("program").value = "";
-          document.getElementById("field").value = "";
-          document.getElementById("score").value = "";
-          document.getElementById("about").value = "";
-          document.getElementById("imageUrl").value = "";
-          document.getElementById("examResultUrl").value = "";
-        } else {
-          // Set the coachId when editing
-          document.getElementById("coachId").value = coachData._id;
-          document.getElementById("name").value = coachData.name;
-          document.getElementById("university").value = coachData.university;
-          document.getElementById("program").value = coachData.program;
-          document.getElementById("field").value = coachData.field;
-          document.getElementById("score").value = coachData.score;
-          document.getElementById("about").value = coachData.about;
-          document.getElementById("imageUrl").value = coachData.imageUrl;
-          document.getElementById("examResultUrl").value = coachData.examResultUrl;
+        document.getElementById("coachForm").reset(); // Reset form for fresh state
+        window.resetMultiSelect();
+        document.getElementById("coachPicturePreview").innerHTML = "";
+        document.getElementById("examResultImagePreview").innerHTML = "";
+
+        if (coachData) {
+            document.getElementById("coachId").value = coachData._id;
+            document.getElementById("name").value = coachData.name;
+            document.getElementById("university").value = coachData.university;
+            document.getElementById("program").value = coachData.program;
+            window.setMultiSelectValues(coachData.field);
+            document.getElementById("score").value = coachData.score;
+            document.getElementById("about").value = coachData.about;
+
+            if (coachData.coachPicture && coachData.coachPicture.url) {
+                document.getElementById("coachPictureUrl").value = coachData.coachPicture.url;
+                document.getElementById("coachPicturePublicId").value = coachData.coachPicture.publicId;
+                document.getElementById("coachPicturePreview").innerHTML = `<img src="${coachData.coachPicture.url}" alt="Coach Preview"/>`;
+            }
+
+            if (coachData.examResultImage && coachData.examResultImage.url) {
+                document.getElementById("examResultImageUrl").value = coachData.examResultImage.url;
+                document.getElementById("examResultImagePublicId").value = coachData.examResultImage.publicId;
+                document.getElementById("examResultImagePreview").innerHTML = `<img src="${coachData.examResultImage.url}" alt="Exam Result Preview"/>`;
+            }
         }
-        
+        document.body.classList.add("modal-open");
         modal.style.display = "flex";
       }
 
       function closeModal() {
+        document.body.classList.remove("modal-open");
         document.getElementById("coachModal").style.display = "none";
       }
 
-      async function deleteCoach(id) {
-        try {
-    const response = await fetch(`/api/coaches/${id}`, {
-      method: 'DELETE'
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to delete coach');
-    }
-    // Refresh the coaches list
-    fetchCoaches();
-  } catch (error) {
-    console.error('Error deleting coach:', error);
-    alert('Failed to delete coach');
-  }
-      }
-
-      async function editCoach(id) {
-        try {
-          // 1. First fetch the coach data
-          const response = await fetch(`/api/coaches/${id}`);
-          
-          // 2. Check if response is OK before parsing
-          if (!response.ok) throw new Error('Failed to fetch coach data');
-          
-          // 3. Get the coach data from response
-          const coachData = await response.json();
-          
-          // 4. Now open modal with retrieved data
-          openCoachModal(coachData);
-        } catch (error) {
-          console.error('Error fetching coach data:', error);
-          alert('Failed to load coach data');
-        }
-      }
-
-      // Form submission handler
-      document.getElementById("coachForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
+      document.getElementById("coachForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const coachId = document.getElementById("coachId").value;
+        const isEditing = !!coachId;
 
         const coachData = {
           name: document.getElementById("name").value,
@@ -357,32 +965,73 @@
           field: document.getElementById("field").value,
           score: document.getElementById("score").value,
           about: document.getElementById("about").value,
-          imageUrl: document.getElementById("imageUrl").value,
-          examResultUrl: document.getElementById("examResultUrl").value
+          coachPicture: {
+            url: document.getElementById("coachPictureUrl").value,
+            publicId: document.getElementById("coachPicturePublicId").value,
+          },
+          examResultImage: {
+            url: document.getElementById("examResultImageUrl").value,
+            publicId: document.getElementById("examResultImagePublicId").value,
+          },
         };
 
-        const coachId = document.getElementById("coachId").value;
-        const method = coachId ? "PUT" : "POST";
-        const url = coachId ? `/api/coaches/${coachId}` : `/api/coaches/single`;
+        const url = isEditing ? `/api/coaches/${coachId}` : "/api/coaches";
+        const method = isEditing ? "PUT" : "POST";
 
         try {
-          console.log("Sending request:", { method, url, coachData }); // Debug log
-          
           const response = await fetch(url, {
-            method,
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(coachData),
           });
 
-          if (!response.ok) throw new Error("Save failed");
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to save coach');
+          }
 
           closeModal();
           fetchCoaches();
         } catch (error) {
           console.error("Error saving coach:", error);
-          alert("Failed to save coach. Please check the console for details.");
+          alert(`Failed to save coach: ${error.message}`);
         }
       });
+
+      async function deleteCoach(id) {
+    // Add a confirmation dialog before proceeding
+    if (confirm("Are you sure you want to delete this coach? This action cannot be undone.")) {
+      try {
+        const response = await fetch(`/api/coaches/${id}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to delete coach.");
+        }
+
+        // Refresh the table to show the coach has been removed
+        fetchCoaches();
+      } catch (error) {
+        console.error("Error deleting coach:", error);
+        alert(`Failed to delete coach: ${error.message}`);
+      }
+    }
+  }
+
+      async function editCoach(id) {
+        try {
+          // Use the new endpoint to get plain text for 'about'
+          const response = await fetch(`/api/coaches/${id}/details`);
+          const coach = await response.json();
+          openCoachModal(coach);
+        } catch (error) {
+          console.error("Error fetching coach data:", error);
+        }
+      }
+
+
     </script>
   </body>
 </html>

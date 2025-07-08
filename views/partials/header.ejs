@@ -1,43 +1,42 @@
-<header>
-  <div class="header" id="myHeader">
-    <a href="/" class="logo" onclick="window.location.href = '/';"
-      ><img src="images\ComfyUI_00067_v4.png" class="imglogo"
-    /></a>
+<header class="header" id="myHeader">
+  <a href="/" class="logo">
+    <img src="https://res.cloudinary.com/dj8prtw8j/image/upload/v1751984497/ComfyUI_00067_v4_aoyjlm.png" class="imglogo" alt="Zero Akademi Logo" />
+  </a>
 
-    <div class="header-right">
-      <a href="/" onclick="window.location.href = '/';">Ana Sayfa</a>
-      <a
-        href="coaches"
-        id="coaches"
-        onclick="window.location.href = '/coaches';"
-        >Koçlarımız</a
-      >
+  <nav class="nav-links">
+    <a href="/">Ana Sayfa</a>
+    <a href="/coaches">Koçlarımız</a>
+    <a href="/faq">SSS</a>
+    <a href="/contact">İletişim</a>
+    <a href="/about">Hakkımızda</a>
+    <a href="/register" class="register-button">Kayıt Ol</a>
+  </nav>
 
-      <a href="faq" id="faq" onclick="window.location.href = '/faq';">SSS</a>
-
-      <a
-        href="contact"
-        id="contact"
-        onclick="window.location.href = '/contact';"
-        >İletişim</a
-      >
-
-      <a href="about" id="contact" onclick="window.location.href = '/about';"
-        >Hakkımızda</a
-      >
-
-      <a
-        href="register"
-        id="register"
-        style="
-          background-color: #f97316;
-          border-radius: 5px;
-          font-weight: bold;
-          color: white;
-        "
-        onclick="window.location.href = '/register';"
-        >Kayıt Ol</a
-      >
-    </div>
+  <div class="hamburger-menu">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 </header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navLinks = document.querySelector('.nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    });
+
+    // Active page indicator
+    const currentPage = window.location.pathname;
+    const links = document.querySelectorAll('.nav-links a');
+
+    links.forEach(link => {
+            if (link.getAttribute('href') === currentPage && !link.classList.contains('register-button')) {
+        link.classList.add('active-page');
+      }
+    });
+  });
+</script>

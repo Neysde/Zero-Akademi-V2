@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         password: formData.get("password"),
       };
 
-      const response = await fetch("http://localhost:3000/api/admin/login", {
+      const response = await fetch(`${window.BASE_URL}/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       // Successful login - redirect to admin dashboard
-      window.location.href = "http://localhost:3000/api/admin/dashboard";
+      window.location.href = `${window.BASE_URL}/admin/dashboard`;
     } catch (error) {
       // Re-enable button on error
       loginButton.disabled = false;
